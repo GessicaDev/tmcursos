@@ -1,5 +1,5 @@
 <template>
-    <cabecalho :busca_exibir="true" :usuario_exibir="true"/>
+    <cabecalho :busca_exibir="true" :usuario_exibir="true" :usuario="username" />
     
     <main>
         <div class="area">
@@ -29,6 +29,7 @@
 </template>
 
 <script setup>
+import { ref } from 'vue'
 import cabecalho from '../componentes/header.vue';
 import barraTitulo from '../componentes/barraTitulo.vue';
 import tmFooter from '@/componentes/tmFooter.vue';
@@ -36,6 +37,8 @@ import tmFooter from '@/componentes/tmFooter.vue';
 import dados from '@/assets/cursos/dados.json';
 let cursos = dados.cursos;
 console.log(cursos);
+
+let username = ref(localStorage.nome_usuario);
 </script>
 
 <style lang="scss">

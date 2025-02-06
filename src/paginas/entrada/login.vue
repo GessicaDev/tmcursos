@@ -5,18 +5,63 @@
         <h1 class="titulo">É bom te ver de volta!</h1>
         <h5 class="titulo2">Faça Login e acesse nosso sistema</h5>
 
-        <form action="/home">
-            <input type="text" name="usuario" id="usuario" placeholder="Usuário ou E-mail">
-            <input type="password" name="senha" id="senha" placeholder="Senha">
+        <!-- <form action="/home"> -->
+        <form>
+            <input type="text" name="usuario" id="usuario" placeholder="Usuário ou E-mail" v-model="usuario">
+            <input type="password" name="senha" id="senha" placeholder="Senha" v-model="senha">
 
-            <button type="submit">Entrar</button>
-            <p>Ainda não possui conta? <RouterLink to="/cadastro">Crie uma</RouterLink>!</p>
+            <button type="submit" @click.prevent="realizarLogin">Entrar</button>
+            <p>Ainda não possui conta? <RouterLink to="/cadastro">Crie uma</RouterLink>!</p>{{ usuario }}
         </form>
     </div>
 </template>
 
-<script> 
+<script setup>
+import router  from '../../rotas/'
+import { ref } from 'vue'
+
+const usuario = ref("");
+const senha = ref("");
+
+function realizarLogin() {
+    const data = {email: usuario.value, senha: senha.value}
+
+    fetch('http://localhost:3000/auth/login', {
+            method: 'POST',
+            //credentials: 'include', 
+            headers: {
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': 'http://localhost:5173', // Adiciona o cabeçalho indicando o tipo de conteúdo
+            },
+            body: JSON.stringify(data) // Converte os dados para JSON
+        })
+        .then(response => response.json()) // Converte a resposta para JSON
+        .then(data => {
+console.log(data)
+            if (data.token) {
+                router.push("/home")
+                console.log(data);
+                localStorage.token = data.token;
+                localStorage.nome_usuario = usuario.value
+            } else {
+                alert("senha errada")
+            }
+            /*if (data.msg === "Login realizado com sucesso!") {
+                // Se o login for bem-sucedido, redireciona para a página principal
+                window.location.href = "home.html";
+            } else {
+                // Exibe uma mensagem de erro
+                alert("Erro ao realizar login: " + data.msg);
+            }*/
+        })
+        .catch(error => {
+            // Exibe um erro em caso de falha na requisição
+            alert("Erro na requisição: " + error.message);
+        });
+}
 </script>
+
+
 <style lang="scss">
 .login {
     margin-top: 5vh;

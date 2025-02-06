@@ -12,8 +12,10 @@
             </div>
 
             <div class="perfil-user" v-if="usuario_exibir">
-                <RouterLink to="/perfil/dados"><i class="fa fa-user"></i> Olá, usuário!</RouterLink>
+                <RouterLink to="/perfil/dados"><i class="fa fa-user"></i> Olá, {{ usuario }}!</RouterLink>
             </div>
+
+            <button @click="deslogar">Sair</button>
         </div>
         
         <a class="menu-abrir" @click="toggleMenu" v-if="busca_exibir || usuario_exibir"><i class="fa-solid fa-bars"></i></a>
@@ -22,9 +24,11 @@
 </template>
 
 <script setup>
+import router from "../../../rotas"
 defineProps({
   usuario_exibir: Boolean,
-  busca_exibir: Boolean
+  busca_exibir: Boolean,
+  usuario: String
 })
 //Defini uma propriedade do componente. Para exibir o botao do perfil do usuario apenas quando a variavel for True
 
@@ -33,6 +37,12 @@ function toggleMenu() {
     document.querySelector('.menu').classList.toggle('aberto');
     document.querySelector('.overlay-links').classList.toggle('ativo');
     document.querySelector('body').classList.toggle('no-scroll');
+}
+
+function deslogar() {
+    router.push("/")
+    localStorage.token = ""
+    localStorage.nome_usuario = ""
 }
 </script>
 
